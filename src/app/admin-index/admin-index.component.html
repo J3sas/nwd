@@ -1,0 +1,38 @@
+
+<div class="container"  *ngIf="!authValidator" >
+<input type="text" name="search-data"  class="form-control" >
+<button class="btn btn-success search-button"> Search</button>
+<button class="btn btn-warning" routerLink="/admin-add" >Add new user</button>
+
+<div class="table-div">
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Account Num</th>
+        <th scope="col">Complete Name</th>
+        <th scope="col">Address</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of allUser">
+        <td>{{user.accountNum}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.address}}</td>
+        <td>
+            <button class="btn btn-info" (click)="gotoUserInfo(user)">Add bill</button>
+        </td>
+      </tr>
+      
+    </tbody>
+  </table>
+
+</div>
+</div>
+
+<div class="div-not-auth" *ngIf="authValidator" >
+  <div class="alert alert-danger" role="alert">
+    <h4>You have no Authorization for this page</h4>
+  </div>
+  
+</div>

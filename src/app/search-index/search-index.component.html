@@ -1,0 +1,24 @@
+
+<div class="notif-div" *ngIf="notifControl" >
+    <div class="alert alert-{{typeOfNotif}}" role="alert">
+        {{messageOnNotif}}
+      </div>
+</div>
+
+<div class="input-search" *ngIf="!foundAccNum" >
+    
+    <input type="text" name="search-data" [formControl]="accNumControl" class="form-control" >
+    <button class="btn btn-success search-button" (click)="onSubAccNum()"> Search</button>
+    
+
+    
+</div>
+
+
+
+
+<div class="validator-acc" *ngIf="foundAccNum">
+    <input type="text" name="search-data" [formControl]="nameAccControl" class="form-control" >
+    <button class="btn btn-success search-button" (click)="validateName()"> Search</button>
+</div>
+
