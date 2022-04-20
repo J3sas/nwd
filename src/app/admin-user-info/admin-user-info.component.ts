@@ -70,7 +70,8 @@ export class AdminUserInfoComponent implements OnInit {
     console.log(`I am adding a bill`)
   }
   billDone(){
-    this.userInfoTrueData.prevReading = this.userInfoTrueData.billInfo.presentRdg
+    console.log(`bills`,this.userInfoTrueData)
+    this.userInfoTrueData.prevReading =  this.userInfoTrueData.prevReading + this.userInfoTrueData.billInfo.presentRdg
     this.userInfoTrueData.prevRdgDate = this.userInfoTrueData.billInfo.dateOfRdg
     this.userInfoTrueData.totalCurrBill = 0
     this.userInfoTrueData.balancePrevBill = 0
