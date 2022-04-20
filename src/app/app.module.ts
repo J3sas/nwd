@@ -7,7 +7,7 @@ import { UserGateComponent } from './user-gate/user-gate.component';
 import { SearchIndexComponent } from './search-index/search-index.component';
 import { UserCreationComponent } from './user-creation/user-creation.component';
 import { AdminIndexComponent } from './admin-index/admin-index.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminUserInfoComponent } from './admin-user-info/admin-user-info.component';
 import { AdminUserAddComponent } from './admin-user-add/admin-user-add.component';
 
@@ -25,7 +25,8 @@ import { AdminUserAddComponent } from './admin-user-add/admin-user-add.component
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

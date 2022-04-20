@@ -51,7 +51,7 @@ export class SearchIndexComponent implements OnInit {
   }
 
   resetNotif(){
-    setTimeout(() => this.notifControl = false,2500);
+    setTimeout(() => this.notifControl = false,4000);
   }
 
   onSubAccNum(){

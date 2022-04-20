@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserInfoBill } from '../model/user.model';
 import { UserServiceService } from '../services/user-service.service';
 
@@ -18,7 +19,8 @@ export class AdminUserAddComponent implements OnInit {
   notifMessage !: string 
 
   constructor(private _http : UserServiceService,
-              private _fb : FormBuilder) { }
+              private _fb : FormBuilder,
+              private router : Router) { }
 
   ngOnInit(): void {
     
@@ -64,4 +66,7 @@ export class AdminUserAddComponent implements OnInit {
   resetNotif(){
     setTimeout(() => this.notifType = ``,2500);
   }
+
+  
+
 }

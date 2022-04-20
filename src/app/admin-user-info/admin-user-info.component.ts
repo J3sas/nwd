@@ -23,14 +23,18 @@ export class AdminUserInfoComponent implements OnInit {
   userIsLoggedIn !: any
   notifType !: string
   notifMessage !: string
+  notAuthorized = false
 
   constructor(private _http : UserServiceService,
             private route : ActivatedRoute,
-            private fb : FormBuilder) { }
+            private fb : FormBuilder,
+            private router : Router) { }
 
   
   ngOnInit(): void {
-    this.userInfo = this.route.snapshot.paramMap.get('id')
+
+    if (sessionStorage.getItem('authorization')) {
+      this.userInfo = this.route.snapshot.paramMap.get('id')
 
     if ( sessionStorage.getItem('authorization')  == 'User') {
       this.userIsLoggedIn = `User`
@@ -52,6 +56,11 @@ export class AdminUserInfoComponent implements OnInit {
 
     
     this.jsonBill()
+    }else{
+      this.notAuthorized = true
+    }
+
+    
       
   }
 
@@ -117,6 +126,11 @@ export class AdminUserInfoComponent implements OnInit {
       {
         console.log(`Done `,data)
       })
+  }
+  logoutCredentials(){
+    sessionStorage.removeItem('authorization')
+    sessionStorage.removeItem('userInfo')
+    this.router.navigate(['/'])
   }
  
 

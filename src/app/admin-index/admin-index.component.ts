@@ -13,6 +13,8 @@ export class AdminIndexComponent implements OnInit {
   allUser !: any
   userInfo !: any
   authValidator  = false
+  accountNumUser !: any
+
   constructor(private _service : UserServiceService,
               private _router : Router ) { }
 
@@ -35,6 +37,16 @@ export class AdminIndexComponent implements OnInit {
     sessionStorage.setItem("userInfo" , JSON.stringify(this.userInfo) )
     this._router.navigate([`user/${this.userInfo.id}`])
 
+  }
+  logoutCredentials(){
+    sessionStorage.removeItem('authorization')
+    sessionStorage.removeItem('userInfo')
+    this._router.navigate(['/'])
+  }
+  searchAccount(){
+    this.allUser = this.allUser.filter((res: any) => {
+      return res.accountNum.match(this.accountNumUser)
+    })
   }
 
 }

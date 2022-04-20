@@ -1,0 +1,11 @@
+.div-navbar{
+    margin-bottom: 10px;
+    right: 0;
+    text-align: end;
+}
+.search-div{
+    display: flex;
+}
+.search-button{
+    margin-left: 10px;
+}

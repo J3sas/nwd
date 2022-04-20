@@ -1,8 +1,13 @@
 
 <div class="container"  *ngIf="!authValidator" >
-<input type="text" name="search-data"  class="form-control" >
-<button class="btn btn-success search-button"> Search</button>
-<button class="btn btn-warning" routerLink="/admin-add" >Add new user</button>
+  <div class="div-navbar">
+    <button class="btn btn-primary" routerLink="/admin-add" >Add new user</button>
+<button class="btn btn-warning" (click)="logoutCredentials()"> Logout</button>
+</div>
+<div class="search-div">
+<input type="text" name="search-data"  [(ngModel)]="accountNumUser" class="form-control" placeholder="Please enter the account number"  >
+<button class="btn btn-success search-button" (click)="searchAccount()"> Search</button>
+</div>
 
 <div class="table-div">
 <table class="table">
