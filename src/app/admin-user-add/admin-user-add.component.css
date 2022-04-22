@@ -1,0 +1,40 @@
+.select-container{
+    display: flex;
+    margin-bottom: 20px;
+}
+.input-class{
+    width: 70%;
+}
+.input-class-meter{
+    width: 30%;
+}
+.input-select{
+    width: auto;
+}
+
+.label-container{
+    display: flex;
+}
+.label-class{
+    margin-left: 18px;
+    margin-right: 18px;
+    margin-top: 14px;
+}
+
+.container-form{
+    margin: auto;
+}
+@media(max-width: 720px) {
+    .input-class{
+        width: 100%;
+    }
+    .input-class-meter{
+        width: 80%; 
+    }
+    .select-container{
+        display: block;  
+    }
+    .label-class{
+        margin-left: 0px;
+    }
+}

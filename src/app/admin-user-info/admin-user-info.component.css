@@ -17,8 +17,13 @@
     background-color: #219ebc;
 }
 .button-req{
-    background-color: #ffb703;
+    background-color: #caf0f8;
+    margin-right: 10px;
 }
 .button-logout{
-    background-color: #fb8500;
+    background-color: #023e8a;
+    color: white;
+}
+.button-add{
+    margin-top: 10px;
 }

@@ -5,8 +5,8 @@
 
 
         <div class="user-info">
-            <h3> Name : {{this.userInfo.name}}</h3>
-            <p>Address : {{this.userInfo.address}}</p>
+            <h3> Name : {{this.userInfo.name | titlecase }}</h3>
+            <p>Address : {{this.userInfo.address | titlecase }}</p>
             <p>Account Number : {{this.userInfo.accountNum}}</p>
             <p>Total Current Bill : ₱ {{this.userInfo.totalCurrBill}}</p>
             <p>Rate Class : {{this.userInfo.rateClass}}</p>
@@ -52,7 +52,7 @@
             <form [formGroup]="billInfo" (ngSubmit)="onSubmit(billInfo)">
                 <label>Current Bill</label>
                 <input type="number" formControlName="presentRdg" class="form-control">
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn btn-success button-add">Submit</button>
             </form>
         </div>
     </div>

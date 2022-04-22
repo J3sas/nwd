@@ -1,15 +1,30 @@
-
 <!-- <div class="notif-div" *ngIf="notifControl" >
     <div class="alert alert-{{typeOfNotif}}" role="alert">
         {{messageOnNotif}}
       </div>
 </div> -->
+<div class="loader-spinner" *ngIf="notReadyApi">
+    <div class="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
 
+<div class="input-search" *ngIf="!foundAccNum &&  !notReadyApi">
 
-<div class="input-search" *ngIf="!foundAccNum" >
-    
-    <input type="text" name="search-data" [formControl]="accNumControl" class="form-control" placeholder="Account Number"  >
-    <button class="btn btn-success search-button" (click)="onSubAccNum()"> Search</button>
+    <input type="text" name="search-data" [formControl]="accNumControl" class="form-control input-searcha"
+        placeholder="Account Number">
+    <button class="btn search-button" (click)="onSubAccNum()"> Search</button>
 </div>
 
 
@@ -17,12 +32,12 @@
 
 
 <div class="validator-acc" *ngIf="foundAccNum">
-    <input type="text" name="search-data" [formControl]="nameAccControl" class="form-control" placeholder="Account name" >
+    <input type="text" name="search-data" [formControl]="nameAccControl" class="form-control input-searcha"
+        placeholder="Account name">
     <button class="btn btn-success search-button" (click)="validateName()"> Search</button>
 </div>
-<div class="notif-div"  *ngIf="notifControl" >
-    <div class="alert alert-{{typeOfNotif}}" role="alert">
+<div class="notif-div" *ngIf="notifControl">
+    <div class="alert alert-{{typeOfNotif}} alert-notif" role="alert">
         {{messageOnNotif}}
-      </div>
+    </div>
 </div>
-

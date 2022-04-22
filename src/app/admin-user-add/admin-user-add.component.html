@@ -8,25 +8,32 @@
     <form [formGroup]="userInfoJson" (ngSubmit)="onSubmitUser(userInfoJson)" >
 
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" formControlName="name">
+        <input type="text" class="form-control input-class" id="name" formControlName="name">
 
         <label for="name">Address</label>
-        <input type="text" class="form-control" id="address" formControlName="address">
+        <input type="text" class="form-control input-class" id="address" formControlName="address">
 
-        <label for="name">RateClass</label>
-        <select class="form-select" aria-label="Default select example" formControlName="rateClass"  >
+        
+        <label for="name">Meter Number</label>
+        <div class="select-container">
+          
+        <input type="text" class="form-control input-class-meter" id="meterNum" formControlName="meterNum">
+        
+        <label for="name" class="label-class">RateClass</label>
+        <select class="form-select input-select" aria-label="Default select example" formControlName="rateClass"  >
             <option  value="Residential">Residential</option>
             <option value="Commercial">Commercial</option>
           </select>
-
-        <label for="name">Meter Number</label>
-        <input type="text" class="form-control" id="meterNum" formControlName="meterNum">
-
-        <label for="name">Account Type</label>
-        <select class="form-select" aria-label="Default select example" formControlName="accountType"  >
+          
+          <label for="name" class="label-class">Account Type</label>
+        <select class="form-select input-select" aria-label="Default select example" formControlName="accountType"  >
             <option  value="User">User</option>
             <option value="Admin">Admin</option>
           </select>
+        </div>
+       
+
+        
 
         <button class="btn btn-success" >Submit</button>
     </form>

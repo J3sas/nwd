@@ -21,14 +21,17 @@ export class SearchIndexComponent implements OnInit {
   typeOfNotif !: string
   messageOnNotif !: string
   userVerifiedData !: any
+  notReadyApi = true
 
   constructor(private __userService : UserServiceService,
               private router :Router) { }
 
   ngOnInit(): void {
+    console.log(`initiated`)
     this.__userService.getMultipleUser()
     .subscribe(data => {
       this.userModelData = data,
+      this.checkIfDataLoaded(),
       console.log(this.userModelData)
     })
   }
@@ -54,17 +57,22 @@ export class SearchIndexComponent implements OnInit {
     setTimeout(() => this.notifControl = false,4000);
   }
 
+  checkIfDataLoaded(){
+    if (this.userModelData) {
+      this.notReadyApi = false
+    }
+  }
+
   onSubAccNum(){
     //console.log(this.userModelData.length)
     for (let index = 0; index < this.userModelData.length+1; index++) {
-      console.log(this.userModelData[index].accountNum)
       if (this.userModelData[index].accountNum == this.accNumControl.value) {
         //console.log(this.userModelData[index].accountNum == this.accNumControl.value)
         this.userVerifiedData = this.userModelData[index]
         this.foundAccNum = true
         this.notifControl = true
         this.typeOfNotif = `success`
-        this.messageOnNotif = `Please input the Account name to verify`
+        this.messageOnNotif = `Success , now please input the Account name to verify`
         this.resetNotif()
         break
       }else{
