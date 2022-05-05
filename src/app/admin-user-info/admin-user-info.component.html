@@ -13,7 +13,7 @@
             <p>Meter Number : {{this.userInfo.meterNum}}</p>
             <p>Consumed :{{this.userInfo.billInfo?.consumed || 0}}</p>
 
-        </div>
+        </div >
 
         <div class="info-buttons">
             <button class="btn button-add-bill" (click)="addBill()" *ngIf="userIsLoggedIn == 'Admin'">Add bill</button>
