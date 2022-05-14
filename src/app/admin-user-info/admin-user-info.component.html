@@ -1,61 +1,110 @@
-
-
-    <div class="container" *ngIf="!addBillDiv || userIsLoggedIn == 'Admin'">
+<div class="container" *ngIf="!addBillDiv || userIsLoggedIn == 'Admin'">
 
 
 
-        <div class="user-info">
-            <h3> Name : {{this.userInfo.name | titlecase }}</h3>
-            <p>Address : {{this.userInfo.address | titlecase }}</p>
-            <p>Account Number : {{this.userInfo.accountNum}}</p>
-            <p>Total Current Bill : ₱ {{this.userInfo.totalCurrBill}}</p>
-            <p>Rate Class : {{this.userInfo.rateClass}}</p>
-            <p>Meter Number : {{this.userInfo.meterNum}}</p>
-            <p>Consumed :{{this.userInfo.billInfo?.consumed || 0}}</p>
-
-        </div >
-
-        <div class="info-buttons">
-            <button class="btn button-add-bill" (click)="addBill()" *ngIf="userIsLoggedIn == 'Admin'">Add bill</button>
-            <button class="btn done-bill" (click)="billDone()"
-                *ngIf="userInfoTrueData?.hasReqPayment && userIsLoggedIn == 'Admin'">Bill Approve</button>
-            <button class="btn button-req" (click)="reqConfirmationPayment()" *ngIf="userIsLoggedIn == 'User'">Request
-                a confirmation on payment</button>
-            <button class="btn button-logout" (click)="logoutCredentials()"
-                *ngIf="userIsLoggedIn  == 'User'">Logout</button>
-        </div>
-
-        <div class="alert-div">
-
-            <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasReqPayment && userIsLoggedIn == 'Admin'">
-                This user is requesting validation on its payment
-            </div>
-    
-            <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasActiveBill && userIsLoggedIn == 'Admin'">
-                This user has an active Bill
-            </div>
-    
-            <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasActiveBill && userIsLoggedIn == 'User'">
-                You have an active Bill, Please pay on Water District Gcash #09266123456
-            </div>
-    
-            <div class="alert alert-{{notifType}}" role="alert" *ngIf="userIsLoggedIn == 'Admin'">
-                {{notifMessage}}
-            </div>
-        </div>
+    <div class="user-info">
+        <h3> Name : {{this.userInfo.name | titlecase }}</h3>
+        <p>Address : {{this.userInfo.address | titlecase }}</p>
+        <p>Account Number : {{this.userInfo.accountNum}}</p>
+        <p>Total Current Bill : ₱ {{this.userInfo.totalCurrBill}}</p>
+        <p>Rate Class : {{this.userInfo.rateClass}}</p>
+        <p>Meter Number : {{this.userInfo.meterNum}}</p>
+        <p>Consumed :{{this.userInfo.billInfo?.consumed || 0}}</p>
 
     </div>
-    
 
-    <div class="container" *ngIf="userIsLoggedIn == 'Admin'">
-        <div class="additional-bill" *ngIf="addBillDiv">
-            <form [formGroup]="billInfo" (ngSubmit)="onSubmit(billInfo)">
-                <label>Current Bill</label>
-                <input type="number" formControlName="presentRdg" class="form-control">
-                <button type="submit" class="btn btn-success button-add">Submit</button>
-            </form>
+
+
+    <div class="info-buttons">
+        <button class="btn button-add-bill" (click)="addBill()" *ngIf="userIsLoggedIn == 'Admin'">Add bill</button>
+
+
+        <div class="container" *ngIf="addBillDivPaymentInput">
+            <div class="additional-bill" >
+                    <input type="text" name="amountPaid" [formControl]="amountPaid" class="form-control input-searcha"
+            placeholder="Account name">
+                    <button type="submit" class="btn btn-success button-add" (click)="billDone()">Submit</button>
+                
+            </div>
+        </div>
+
+
+
+
+        <button class="btn done-bill" (click)="showPaymentInput()" 
+            *ngIf="userInfoTrueData?.hasReqPayment && userIsLoggedIn == 'Admin' && !addBillDivPaymentInput ">Bill Approve me</button>
+        <button class="btn button-req" (click)="reqConfirmationPayment()" *ngIf="userIsLoggedIn == 'User'">Request
+            a confirmation on payment</button>
+        <button class="btn button-logout" (click)="logoutCredentials()"
+            *ngIf="userIsLoggedIn  == 'User'">Logout</button>
+    </div>
+    <div class="payment-info" *ngIf="userIsLoggedIn == 'User'">
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Bill No</th>
+                    <th scope="col">Billing Month</th>
+                    <th scope="col">Date of Reading </th>
+                    <th scope="col">Present Reading </th>
+                    <th scope="col">Consumed </th>
+                    <th scope="col">Current Bill Charges </th>
+                    <th scope="col">Due Date </th>
+                    <th scope="col">Type of Transaction </th>
+                    <th scope="col">Bill Balance </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of this.userInfo.paidBillInfo" >
+                    <td>{{data.billNo}}</td>
+                    <td>{{data.billingMonth}}</td>
+                    <td>{{data.dateOfRdg}}</td>
+                    <td>{{data.presentRdg}}</td>
+                    <td>{{data.consumed}}</td>
+                    <td> ₱ {{data.currentBillCharges}}</td>
+                    <td>{{data.dueDate}}</td>
+                    <td>{{data.typeOfTransaction | titlecase}}</td>
+                    <td> ₱ {{ data.billBalance}}</td>
+                    
+                </tr>
+
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <div class="alert-div">
+
+        <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasReqPayment && userIsLoggedIn == 'Admin'">
+            This user is requesting validation on its payment
+        </div>
+
+        <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasActiveBill && userIsLoggedIn == 'Admin'">
+            This user has an active Bill
+        </div>
+
+        <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasActiveBill && userIsLoggedIn == 'User'">
+            You have an active Bill, Please pay on Water District Gcash #09266123456
+        </div>
+
+        <div class="alert alert-{{notifType}}" role="alert" *ngIf="userIsLoggedIn == 'Admin'">
+            {{notifMessage}}
         </div>
     </div>
+
+</div>
+
+
+<div class="container" *ngIf="userIsLoggedIn == 'Admin'">
+    <div class="additional-bill" *ngIf="addBillDiv">
+        <form [formGroup]="billInfo" (ngSubmit)="onSubmit(billInfo)">
+            <label>Current Bill</label>
+            <input type="number" formControlName="presentRdg" class="form-control">
+            <button type="submit" class="btn btn-success button-add">Submit</button>
+        </form>
+    </div>
+</div>
 
 
 
