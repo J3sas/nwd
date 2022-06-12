@@ -19,11 +19,16 @@
         <div></div>
     </div>
 </div>
+<div class="div-wall" *ngIf="!notReadyApi" >
+    <img  src="../../assets/pictures/nwd logo.png"
+     class="image-class">
+</div>
 
+<div class="class-body">
 <div class="input-search" *ngIf="!foundAccNum &&  !notReadyApi">
 
     <input type="text" name="search-data" [formControl]="accNumControl" class="form-control input-searcha"
-        placeholder="Account Number">
+        placeholder="Account Number" appPwd appPwdAnother>
     <button class="btn search-button" (click)="onSubAccNum()"> Search</button>
 </div>
 
@@ -33,7 +38,7 @@
 
 <div class="validator-acc" *ngIf="foundAccNum">
     <input type="text" name="search-data" [formControl]="nameAccControl" class="form-control input-searcha"
-        placeholder="Account name">
+        placeholder="Account name" appPwd>
     <button class="btn btn-success search-button" (click)="validateName()"> Search</button>
 </div>
 <div class="notif-div" *ngIf="notifControl">
@@ -41,3 +46,4 @@
         {{messageOnNotif}}
     </div>
 </div>
+</div> 

@@ -100,7 +100,7 @@
     <div class="additional-bill" *ngIf="addBillDiv">
         <form [formGroup]="billInfo" (ngSubmit)="onSubmit(billInfo)">
             <label>Current Bill</label>
-            <input type="number" formControlName="presentRdg" class="form-control">
+            <input type="number" formControlName="presentRdg" class="form-control" >
             <button type="submit" class="btn btn-success button-add">Submit</button>
         </form>
     </div>
