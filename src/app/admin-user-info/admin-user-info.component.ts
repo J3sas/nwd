@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserInfoBill } from '../model/user.model';
+import { UserBillInformation, UserInfoBill } from '../model/user.model';
 import { UserServiceService } from '../services/user-service.service';
 
 @Component({
@@ -26,8 +26,10 @@ export class AdminUserInfoComponent implements OnInit {
   notifMessage !: string
   notAuthorized = false
   addBillDivPaymentInput !: any
+  userNotEnoguh !: boolean
   amountPaid = new FormControl();
-  
+  consumedBillController = new FormControl();
+
   dummyJsonPayment = {
     billNo: "",
     billingMonth: "",
@@ -37,6 +39,12 @@ export class AdminUserInfoComponent implements OnInit {
     currentBillCharges: 0,
     dueDate: ""
   }
+
+   date = new Date();
+   fullDate: string = (this.date.getMonth()+1)+'-'+this.date.getDate()+'-'+this.date.getFullYear()
+   dueDateFormat: string = (this.date.getMonth()+2)+'-'+this.date.getDate()+'-'+this.date.getFullYear()
+   monthName = this.date.toLocaleString('en-us', { month: 'long' });
+
   constructor(private _http : UserServiceService,
             private route : ActivatedRoute,
             private fb : FormBuilder,
@@ -63,7 +71,8 @@ export class AdminUserInfoComponent implements OnInit {
 
     this._http.getWaterResidence()
     .subscribe(data => {
-      this.waterRateResidence = data.residence
+      this.waterRateResidence = data[0].residence
+      console.log(this.waterRateResidence)
     })
 
     
@@ -72,9 +81,32 @@ export class AdminUserInfoComponent implements OnInit {
     }else{
       this.notAuthorized = true
     }
+      //console.log(this.generateJsonBillModel('billing'))
+  }
+
+  generateJsonBillModel(typeOfGen : string ){
+    if(this.countActiveBill() == undefined || this.countActiveBill() <=1 ){
+      return  new UserBillInformation(
+        this.date.getFullYear()+this.date.getMonth()+1+this.userInfo.id,
+        this.monthName + ' ' + this.date.getFullYear(),
+        this.fullDate,
+        this.presentRdgInt,
+        this.readingForMonth,
+        this.readingForMonth * this.waterRateResidence,
+        this.dueDateFormat,
+        typeOfGen,
+        this.userInfo.totalCurrBill,
+        this.countActiveBill()+1
+      )
 
     
-      
+    }else{
+      return  null
+    }
+    
+  }
+  countActiveBill(){
+    return this.userInfoTrueData.billInfo.length
   }
 
 
@@ -84,33 +116,58 @@ export class AdminUserInfoComponent implements OnInit {
     
   }
   billDone(){
-    if (this.userInfoTrueData.billInfo.length != 0) {
-      this.userInfoTrueData.paidBillInfo.push(this.userInfoTrueData.billInfo)
-    this.userInfoTrueData.paidBillInfo.push(this.jsonBillForPayment(this.userInfoTrueData.billInfo,'valid'))
-    this.userInfoTrueData.prevRdgDate = this.userInfoTrueData.billInfo.dateOfRdg
-    this.userInfoTrueData.prevReading =  this.userInfoTrueData.prevReading + this.userInfoTrueData.billInfo.presentRdg
-    }
-    
-    //console.log(this.userInfoTrueData)
-    if (this.userInfoTrueData.billInfo.length == 0) {
-      this.userInfoTrueData.paidBillInfo.push(this.jsonBillForPayment(this.dummyJsonPayment,'paymentOnly'))
-    }
-    
-    let tempTotal = this.userInfoTrueData.totalCurrBill - this.amountPaid.value // 500
-    this.userInfoTrueData.balancePrevBill = tempTotal
-    this.userInfoTrueData.totalCurrBill = tempTotal
-    this.userInfoTrueData.hasActiveBill = this.userInfoTrueData.totalCurrBill == 0 ? false : true 
-    this.userInfoTrueData.hasReqPayment = false
-    
-    this.userInfoTrueData.billInfo = []
-    console.log(`bill paid`,this.userInfoTrueData)
-    
-    this._http.updateUserAddBill(this.userInfoTrueData.id,this.userInfoTrueData)
+    if(this.getActiveBillTotalCharge('total') == this.amountPaid.value){
+      if(this.userInfoTrueData.billInfo[0]){
+        this.userInfoTrueData.paidBillInfo.push(this.userInfoTrueData.billInfo[0])
+      }
+      if(this.userInfoTrueData.billInfo[1]){
+        this.userInfoTrueData.paidBillInfo.push(this.userInfoTrueData.billInfo[1])
+        this.userInfoTrueData.balancePrevBill = this.userInfoTrueData.billInfo[1].currentBillCharges
+        this.userInfoTrueData.prevReading = this.userInfoTrueData.billInfo[1].presentRdg
+      }
+      
+      this.userInfoTrueData.billInfo = []
+      this.userInfoTrueData.hasActiveBill = false
+      this.userInfoTrueData.hasReqPayment = false
+      this.userInfoTrueData.totalCurrBill = 0 
+      this.userNotEnoguh = false
+      this.addBillDivPaymentInput = false
+      this._http.updateUserAddBill(this.userInfoTrueData.id,this.userInfoTrueData)
     .subscribe(data => {
       console.log(`Updated successfully`)
       this.notifType = `success`
       this.notifMessage = `Successsfully received payment `
     })
+    }else{
+      this.userNotEnoguh = true
+    }
+    // if (this.userInfoTrueData.billInfo.length != 0) {
+    //   this.userInfoTrueData.paidBillInfo.push(this.userInfoTrueData.billInfo)
+    // this.userInfoTrueData.paidBillInfo.push(this.jsonBillForPayment(this.userInfoTrueData.billInfo,'valid'))
+    // this.userInfoTrueData.prevRdgDate = this.userInfoTrueData.billInfo.dateOfRdg
+    // this.userInfoTrueData.prevReading =  this.userInfoTrueData.prevReading + this.userInfoTrueData.billInfo.presentRdg
+    // }
+    
+    // //console.log(this.userInfoTrueData)
+    // if (this.userInfoTrueData.billInfo.length == 0) {
+    //   this.userInfoTrueData.paidBillInfo.push(this.jsonBillForPayment(this.dummyJsonPayment,'paymentOnly'))
+    // }
+    
+    // let tempTotal = this.userInfoTrueData.totalCurrBill - this.amountPaid.value // 500
+    // this.userInfoTrueData.balancePrevBill = tempTotal
+    // this.userInfoTrueData.totalCurrBill = tempTotal
+    // this.userInfoTrueData.hasActiveBill = this.userInfoTrueData.totalCurrBill == 0 ? false : true 
+    // this.userInfoTrueData.hasReqPayment = false
+    
+    // this.userInfoTrueData.billInfo = []
+    console.log(`bill paid`,this.userInfoTrueData)
+    
+    // this._http.updateUserAddBill(this.userInfoTrueData.id,this.userInfoTrueData)
+    // .subscribe(data => {
+    //   console.log(`Updated successfully`)
+    //   this.notifType = `success`
+    //   this.notifMessage = `Successsfully received payment `
+    // })
     this.amountPaid.reset()
   }
   jsonBillForPayment(formerData :any,actionType : any){
@@ -168,8 +225,8 @@ export class AdminUserInfoComponent implements OnInit {
     let date = new Date();
     let fullDate: string = (date.getMonth()+1)+'-'+date.getDate()+'-'+date.getFullYear()
     let dueDateFormat: string = (date.getMonth()+2)+'-'+date.getDate()+'-'+date.getFullYear()
-    
     let monthName = date.toLocaleString('en-us', { month: 'long' });
+
     //let dueDate = date.toLocaleString('en-us', { month: 'long' });
     //console.log(`this.userInfo.prevReading`,this.userInfoTrueData)
     this.billInfo = this.fb.group({
@@ -186,30 +243,31 @@ export class AdminUserInfoComponent implements OnInit {
     return this.billInfo.value
   }
 
-  onSubmit(data : any){
-    if (this.userInfo.billInfo.length != 0 ) {
-      console.log(`has active bill`)
-      this.userInfoTrueData.paidBillInfo.push(this.userInfo.billInfo)
-      this.readingForMonth = data.value.presentRdg - this.userInfo.prevReading // cur reading - prev = consumed reading
-      this.userInfoTrueData.balancePrevBill = this.userInfo.totalCurrBill 
-      this.userInfoTrueData.prevReading = this.userInfo.prevReading + this.userInfo.billInfo.consumed
-      this.userInfoTrueData.prevRdgDate =  this.userInfo.billInfo.dateOfRdg
-      // this.userInfoTrueData.hasActiveBill = true
-      // this.userInfoTrueData.totalCurrBill = (this.readingForMonth * this.waterRateResidence ) +  this.userInfoTrueData.balancePrevBill
-    }
-    this.readingForMonth = data.value.presentRdg - this.userInfo.prevReading
+  onSubmit(){
+    this.readingForMonth = this.consumedBillController.value - (this.userInfo.prevReading == null || this.userInfo.prevReading == undefined ? 0 : this.userInfo.prevReading)
     this.userInfoTrueData.hasActiveBill = true
-    this.presentRdgInt = data.value.presentRdg
+    this.presentRdgInt = this.consumedBillController.value
     this.userInfoTrueData.totalCurrBill = (this.readingForMonth * this.waterRateResidence ) +  this.userInfoTrueData.balancePrevBill
     
-    
-    this.userInfoTrueData.billInfo = this.jsonBill()
-    this._http.updateUserAddBill(this.userInfoTrueData.id,this.userInfoTrueData)
+    if (this.generateJsonBillModel('billing') == null) {
+      return null
+    }
+    this.userInfoTrueData.billInfo.push(this.generateJsonBillModel('billing'))
+    if(this.userInfo.billInfo.length != 0){
+
+      this.userInfoTrueData.totalCurrBill = this.getActiveBillTotalCharge('total')
+      this.userInfoTrueData.balancePrevBill = this.getActiveBillTotalCharge('pastBill') // cur reading - prev = consumed reading
+      this.userInfoTrueData.prevReading = this.userInfoTrueData.billInfo[0].presentRdg
+      this.userInfoTrueData.prevRdgDate =  this.userInfo.billInfo[0].dateOfRdg
+    }
+     console.log(this.userInfoTrueData)
+     return this._http.updateUserAddBill(this.userInfoTrueData.id,this.userInfoTrueData)
     .subscribe(data => {
-      console.log(`Done success`)
+      console.log(`Done success`),
+      this.addBillDiv = false
+      this.consumedBillController.reset()
     })
-    this.addBillDiv = false
-  }
+   }
   reqConfirmationPayment(){
     this.userInfoTrueData.hasReqPayment = true
     this._http.updateUserAddBill(this.userInfoTrueData.id,this.userInfoTrueData)
@@ -222,6 +280,24 @@ export class AdminUserInfoComponent implements OnInit {
     sessionStorage.removeItem('authorization')
     sessionStorage.removeItem('userInfo')
     this.router.navigate(['/'])
+  }
+
+  getActiveBillTotalCharge(transType : string){
+    let tempTotal = 0
+    switch (transType) {
+      case 'total':
+        for (let index = 0; index < this.userInfoTrueData.billInfo.length; index++) {
+          tempTotal +=this.userInfoTrueData.billInfo[index].currentBillCharges;
+          
+        }
+        break;
+    
+      case 'pastBill':
+        tempTotal =this.userInfoTrueData.billInfo[0].currentBillCharges
+        break;
+    }
+    
+    return tempTotal
   }
  
 

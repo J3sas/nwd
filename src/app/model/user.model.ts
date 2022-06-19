@@ -33,3 +33,18 @@ export class WaterInfoBill {
       
     ){}
 }
+
+export class UserBillInformation {
+  constructor(
+      public billNo: any,
+      public billingMonth: any,
+      public dateOfRdg: any,
+      public presentRdg: any,
+      public consumed: any,
+      public currentBillCharges: any,
+      public dueDate: any,
+      public typeOfTransaction: any,
+      public billBalance: any,
+      public billCount ?: number
+    ){}
+}

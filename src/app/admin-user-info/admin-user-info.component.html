@@ -80,6 +80,11 @@
             This user is requesting validation on its payment
         </div>
 
+        <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasReqPayment && userIsLoggedIn == 'Admin' && 
+         userNotEnoguh">
+            User paid amount was not enough 
+        </div>
+
         <div class="alert done-bill" role="alert" *ngIf="userInfoTrueData?.hasActiveBill && userIsLoggedIn == 'Admin'">
             This user has an active Bill
         </div>
@@ -98,11 +103,11 @@
 
 <div class="container" *ngIf="userIsLoggedIn == 'Admin'">
     <div class="additional-bill" *ngIf="addBillDiv">
-        <form [formGroup]="billInfo" (ngSubmit)="onSubmit(billInfo)">
+       
             <label>Current Bill</label>
-            <input type="number" formControlName="presentRdg" class="form-control" >
-            <button type="submit" class="btn btn-success button-add">Submit</button>
-        </form>
+            <input type="number" [formControl]="consumedBillController" class="form-control" >
+            <button type="submit" class="btn btn-success button-add" (click)="onSubmit()">Submit</button>
+        
     </div>
 </div>
 
