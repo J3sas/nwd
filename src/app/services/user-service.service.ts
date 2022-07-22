@@ -10,7 +10,7 @@ export class UserServiceService {
 
   link = 'https://6107e4c3d73c6400170d36f2.mockapi.io/chilldb/nwd-users'
   waterLink = 'https://6107e4c3d73c6400170d36f2.mockapi.io/chilldb/waterDb'
-
+ 
   nwdUsersApi = 'https://beapi-all.herokuapp.com/nwd'
   waterRateApi = 'https://beapi-all.herokuapp.com/water'
   
