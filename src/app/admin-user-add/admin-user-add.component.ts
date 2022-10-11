@@ -14,6 +14,7 @@ export class AdminUserAddComponent implements OnInit {
   userInfoJson !: any
   empArray : UserInfoBill[] = []
   date = new Date();
+  tempUser !: any;
 
   notifType !: string 
   notifMessage !: string 
@@ -40,7 +41,8 @@ export class AdminUserAddComponent implements OnInit {
       totalCurrBill : 0,
       accountType : 'User',
       billInfo : [[]],
-      prevReading : 0
+      prevReading : 0,
+      password:['',Validators.required]
     })
     return this.userInfoJson.value
   }
@@ -50,22 +52,23 @@ export class AdminUserAddComponent implements OnInit {
     if (userInfo.status == `INVALID`) {
         this.notifType = `danger`
       this.notifMessage = `ERROR, something is wrong with your inputs`
-      this.resetNotif()
+      // this.resetNotif()
     }else if(userInfo.status == `VALID`){
     this._http.addUser(userInfo.value)
     .subscribe(data => {
+      console.log(userInfo.value,data)
       this.notifType = `success`
-      this.notifMessage = `Successfully added`
+      this.tempUser = data;
+      this.notifMessage = `Successfully added Acc num: ${this.tempUser.accountNum} and password ${this.tempUser.password} `
       this.userInfoJson.reset()
-      this.resetNotif()
-
+      // this.resetNotif()
     })
     }
   }
 
-  resetNotif(){
-    setTimeout(() => this.notifType = ``,2500);
-  }
+  // resetNotif(){
+  //   setTimeout(() => this.notifType = ``,1000);
+  // }
 
   
 

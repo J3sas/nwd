@@ -29,6 +29,7 @@ export class AdminUserInfoComponent implements OnInit {
   userNotEnoguh !: boolean
   amountPaid = new FormControl();
   consumedBillController = new FormControl();
+  confirmedRequest !: boolean;
 
   dummyJsonPayment = {
     billNo: "",
@@ -85,8 +86,26 @@ export class AdminUserInfoComponent implements OnInit {
   }
 
   generateJsonBillModel(typeOfGen : string ){
-    if(this.countActiveBill() == undefined || this.countActiveBill() <=1 ){
-      return  new UserBillInformation(
+    // may graph 
+    // if(this.countActiveBill() == undefined || this.countActiveBill() <=1 ){
+    //   return  new UserBillInformation(
+    //     this.date.getFullYear()+this.date.getMonth()+1+this.userInfo.id,
+    //     this.monthName + ' ' + this.date.getFullYear(),
+    //     this.fullDate,
+    //     this.presentRdgInt,
+    //     this.readingForMonth,
+    //     this.readingForMonth * this.waterRateResidence,
+    //     this.dueDateFormat,
+    //     typeOfGen,
+    //     this.userInfo.totalCurrBill,
+    //     this.countActiveBill()+1
+    //   )
+
+    
+    // }else{
+    //   return  null
+    // }
+       return  new UserBillInformation(
         this.date.getFullYear()+this.date.getMonth()+1+this.userInfo.id,
         this.monthName + ' ' + this.date.getFullYear(),
         this.fullDate,
@@ -98,11 +117,6 @@ export class AdminUserInfoComponent implements OnInit {
         this.userInfo.totalCurrBill,
         this.countActiveBill()+1
       )
-
-    
-    }else{
-      return  null
-    }
     
   }
   countActiveBill(){
@@ -116,7 +130,7 @@ export class AdminUserInfoComponent implements OnInit {
     
   }
   billDone(){
-    if(this.getActiveBillTotalCharge('total') == this.amountPaid.value){
+    // if(this.getActiveBillTotalCharge('total') == this.amountPaid.value){
       if(this.userInfoTrueData.billInfo[0]){
         this.userInfoTrueData.paidBillInfo.push(this.userInfoTrueData.billInfo[0])
       }
@@ -138,9 +152,9 @@ export class AdminUserInfoComponent implements OnInit {
       this.notifType = `success`
       this.notifMessage = `Successsfully received payment `
     })
-    }else{
-      this.userNotEnoguh = true
-    }
+    // }else{
+    //   this.userNotEnoguh = true
+    // }
     // if (this.userInfoTrueData.billInfo.length != 0) {
     //   this.userInfoTrueData.paidBillInfo.push(this.userInfoTrueData.billInfo)
     // this.userInfoTrueData.paidBillInfo.push(this.jsonBillForPayment(this.userInfoTrueData.billInfo,'valid'))
@@ -201,6 +215,7 @@ export class AdminUserInfoComponent implements OnInit {
       return this.billInfoPayment.value
 
     }else{
+      // normal trans
       this.billInfoPayment = this.fb.group({
         billNo : formerData.billNo,
         billingMonth : formerData.billingMonth,
@@ -218,7 +233,8 @@ export class AdminUserInfoComponent implements OnInit {
   }
 
   showPaymentInput(){
-    this.addBillDivPaymentInput = true
+    // this.addBillDivPaymentInput = true
+    this.billDone();
 
   }
   jsonBill(){
@@ -244,23 +260,25 @@ export class AdminUserInfoComponent implements OnInit {
   }
 
   onSubmit(){
-    this.readingForMonth = this.consumedBillController.value - (this.userInfo.prevReading == null || this.userInfo.prevReading == undefined ? 0 : this.userInfo.prevReading)
+    // this.readingForMonth = this.consumedBillController.value - (this.userInfo.prevReading == null || this.userInfo.prevReading == undefined ? 0 : this.userInfo.prevReading)
+    this.readingForMonth = this.consumedBillController.value 
     this.userInfoTrueData.hasActiveBill = true
     this.presentRdgInt = this.consumedBillController.value
-    this.userInfoTrueData.totalCurrBill = (this.readingForMonth * this.waterRateResidence ) +  this.userInfoTrueData.balancePrevBill
-    
+    // this.userInfoTrueData.totalCurrBill = (this.readingForMonth * this.waterRateResidence ) +  this.userInfoTrueData.balancePrevBill
+    this.userInfoTrueData.totalCurrBill = (this.readingForMonth * this.waterRateResidence ) // +  this.userInfoTrueData.balancePrevBill
     if (this.generateJsonBillModel('billing') == null) {
+      console.log('came here')
       return null
     }
     this.userInfoTrueData.billInfo.push(this.generateJsonBillModel('billing'))
-    if(this.userInfo.billInfo.length != 0){
-
-      this.userInfoTrueData.totalCurrBill = this.getActiveBillTotalCharge('total')
-      this.userInfoTrueData.balancePrevBill = this.getActiveBillTotalCharge('pastBill') // cur reading - prev = consumed reading
-      this.userInfoTrueData.prevReading = this.userInfoTrueData.billInfo[0].presentRdg
-      this.userInfoTrueData.prevRdgDate =  this.userInfo.billInfo[0].dateOfRdg
-    }
-     console.log(this.userInfoTrueData)
+    // if(this.userInfo.billInfo.length != 0){
+    //   console.log('came here 2')
+    //   // this.userInfoTrueData.totalCurrBill = this.getActiveBillTotalCharge('total')
+    //   // this.userInfoTrueData.balancePrevBill = this.getActiveBillTotalCharge('pastBill') // cur reading - prev = consumed reading
+    //   this.userInfoTrueData.prevReading = this.userInfoTrueData.billInfo[0].presentRdg
+    //   this.userInfoTrueData.prevRdgDate =  this.userInfo.billInfo[0].dateOfRdg
+    // }
+    //  return console.log(this.userInfoTrueData)
      return this._http.updateUserAddBill(this.userInfoTrueData.id,this.userInfoTrueData)
     .subscribe(data => {
       console.log(`Done success`),
@@ -274,6 +292,10 @@ export class AdminUserInfoComponent implements OnInit {
     .subscribe(data => 
       {
         console.log(`Done `,data)
+        this.confirmedRequest = true;
+        this.notifType = 'success'
+        this.notifMessage = 'Successfully request a confirmation'
+
       })
   }
   logoutCredentials(){
@@ -288,6 +310,7 @@ export class AdminUserInfoComponent implements OnInit {
       case 'total':
         for (let index = 0; index < this.userInfoTrueData.billInfo.length; index++) {
           tempTotal +=this.userInfoTrueData.billInfo[index].currentBillCharges;
+          console.log(tempTotal);
           
         }
         break;

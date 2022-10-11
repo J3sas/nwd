@@ -28,7 +28,7 @@
 <div class="input-search" *ngIf="!foundAccNum &&  !notReadyApi">
 
     <input type="text" name="search-data" [formControl]="accNumControl" class="form-control input-searcha"
-        placeholder="Account Number" appPwd appPwdAnother>
+        placeholder="Account Number" appPwd appPwdAnother id="acc-num-search">
     <button class="btn search-button" (click)="onSubAccNum()"> Search</button>
 </div>
 
@@ -38,7 +38,7 @@
 
 <div class="validator-acc" *ngIf="foundAccNum">
     <input type="text" name="search-data" [formControl]="nameAccControl" class="form-control input-searcha"
-        placeholder="Account name" appPwd>
+        placeholder="password" appPwd id="acc-name-search">
     <button class="btn btn-success search-button" (click)="validateName()"> Search</button>
 </div>
 <div class="notif-div" *ngIf="notifControl">

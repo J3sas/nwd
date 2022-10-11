@@ -20,3 +20,9 @@
     margin-right: 2px;
     color: white;
 }
+.alert-has-bill{
+    background-color: #FFC4C4;
+}
+.alert-no-bill{
+    background-color: #B4FF9F;
+}

@@ -20,12 +20,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of allUser">
+        <tr *ngFor="let user of allUser" [ngClass]=" user.hasActiveBill ? 'alert-has-bill' : ''" >
           <td>{{user.accountNum}}</td>
           <td>{{user.name}}</td>
           <td>{{user.address}}</td>
           <td>
-            <button class="btn button-new-user" (click)="gotoUserInfo(user)">Add bill</button>
+            <button class="btn button-new-user" (click)="gotoUserInfo(user)">View</button>
           </td>
         </tr>
 
